@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velocidad de Gestores de Base de Datos - NODE.JS</title>
+    <link rel="stylesheet" href="index.css" />
+    <script src="index.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <h1>Bienvenido a nuestra aplicacion de Velocidad de Gestores de Base de Datos :p</h1>
+
+
+    <!-- Botones de consulta -->
+    <section>
+  <h2>Comprueba la conexion de los 4 Gestores de Base de Datos</h2>
+  <div class="contenedor-botones">
+    <button type="button" id="mysql-button" data-gestor="mysql" class="button button-blue gestor-button">MySQL</button>
+    <button type="button" id="postgresql-button" data-gestor="postgresql" class="button button-green gestor-button">PostgreSQL</button>
+    <button type="button" id="sqlserver-button" data-gestor="sqlserver" class="button button-red gestor-button">SQL Server</button>
+    <button type="button" id="oracle-button" data-gestor="oracle" class="button button-purple gestor-button">Oracle</button>
+  </div>
+</section>
+
+    <!-- Formulario de inserción -->
+<section class="insertar-producto">
+  <form id="product-form">
+    <h2>Aquí prueba a Insertar un producto</h2>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+      <label style="flex: 2;">
+        Nombre:
+        <input type="text" name="name" id="name" required />
+      </label>
+
+      <label style="flex: 2;">
+        Categoría:
+        <input type="text" name="category" id="category" required />
+      </label>
+
+      <label style="flex: 2;">
+        Precio:
+        <input type="number" name="price" step="0.01" id="price" required />
+      </label>
+
+      <label style="flex: 2;">
+        Stock:
+        <input type="number" name="stock" id="stock" required />
+      </label>
+
+      <label style="flex: 3;">
+        Base de datos:
+        <select name="gestor" id="gestor" required>
+          <option value="mysql">MySQL</option>
+          <option value="postgresql">PostgreSQL</option>
+          <option value="sqlserver">SQL Server</option>
+          <option value="oracle">Oracle</option>
+        </select>
+      </label>
+    </div>
+
+    <br />
+
+    <div style="display: flex; gap: 10px;">
+      <button class="button" type="button" id="insertar-directo">
+        Insertar por sentencia
+      </button>
+      <button class="button" type="button" id="insertar-stored">
+        Insertar por Stored Procedure
+      </button>
+    </div>
+  </form>
+</section>
+      <div>
+        <h1>Comprobación del estado de las Inserciones</h1>
+        <div class="cards-container">
+          <div class="card">
+            <div class="card-header" style="background-color: #ffffff; color: #000;">
+              <h2>MySQL</h2>
+            </div>
+            <div class="card-body">
+              <h3>Estado de Inserción Directa</h3>
+              <p id="insertar-directo-status-mysql">N/A</p>
+              <h3>Estado de Inserción por Stored Procedure</h3>
+              <p id="insertar-stored-status-mysql">N/A</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" style="background-color: #f5f5f5; color: #000;">
+              <h2>PostgreSQL</h2>
+            </div>
+            <div class="card-body">
+              <h3>Estado de Inserción Directa</h3>
+              <p id="insertar-directo-status-postgresql">N/A</p>
+              <h3>Estado de Inserción por Stored Procedure</h3>
+              <p id="insertar-stored-status-postgresql">N/A</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" style="background-color: #e0e0e0; color: #000;">
+              <h2>SQL Server</h2>
+            </div>
+            <div class="card-body">
+              <h3>Estado de Inserción Directa</h3>
+              <p id="insertar-directo-status-sqlserver">N/A</p>
+              <h3>Estado de Inserción por Stored Procedure</h3>
+              <p id="insertar-stored-status-sqlserver">N/A</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" style="background-color: #cccccc; color: #000;">
+              <h2>Oracle</h2>
+            </div>
+            <div class="card-body">
+              <h3>Estado de Inserción Directa</h3>
+              <p id="insertar-directo-status-oracle">N/A</p>
+              <h3>Estado de Inserción por Stored Procedure</h3>
+              <p id="insertar-stored-status-oracle">N/A</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
