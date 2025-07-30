@@ -1,4 +1,4 @@
-create database if not exists BDPRODUCTO5;
+create database if not exists BDPRODUCTO10;
 use BDPRODUCTO5;
 create table producto (
 	id int auto_increment PRIMARY KEY,

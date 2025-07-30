@@ -449,7 +449,7 @@ router.post("/oracle", async (req, res) => {
       while (Date.now() - start < 60000) {
         try {
           await executeQueryOracle(
-            "INSERT INTO producto (nombre, categoria, precio, stock) VALUES (:name, :category, :price, :stock)",
+            "INSERT INTO producto10 (nombre, categoria, precio, stock) VALUES (:name, :category, :price, :stock)",
             [name, category, price, stock]
           );
           count++;
@@ -497,7 +497,7 @@ router.post("/oracle/insert-batch", async (req, res) => {
       while (Date.now() - start < 60000) {
         try {
           await executeQueryOracle(
-            "BEGIN SP_insertar_producto(:name, :category, :price, :stock); END;",
+            "BEGIN SP_insertar_producto10(:name, :category, :price, :stock); END;",
             [name, category, price, stock]
           );
           count++;

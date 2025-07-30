@@ -4,7 +4,7 @@ import mssql from "mssql";
 // Windows Authentication configuration - use environment variables
 const configWindowsAuth = {
   server: process.env.SQLSERVER_SERVER || "localhost",
-  database: process.env.SQLSERVER_DATABASE || "BDPRODUCTO5",
+  database: process.env.SQLSERVER_DATABASE || "BDPRODUCTO10",
   port: parseInt(process.env.SQLSERVER_PORT) || 1433,
   pool: {
     max: 10,
@@ -22,9 +22,9 @@ const configWindowsAuth = {
 // SQL Server Authentication configuration - use environment variables
 const configUserAuth = {
   user: process.env.SQLSERVER_USER || "sa",
-  password: process.env.SQLSERVER_PASSWORD || "123456",
+  password: process.env.SQLSERVER_PASSWORD || "1234567",
   server: process.env.SQLSERVER_SERVER || "localhost",
-  database: process.env.SQLSERVER_DATABASE || "BDPRODUCTO5",
+  database: process.env.SQLSERVER_DATABASE || "BDPRODUCTO10",
   port: parseInt(process.env.SQLSERVER_PORT) || 1433,
   pool: {
     max: 10,

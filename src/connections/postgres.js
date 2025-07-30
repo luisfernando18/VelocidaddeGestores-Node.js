@@ -5,7 +5,7 @@ import { Pool } from "pg";
 const config = {
   user: process.env.POSTGRES_USER || "postgres",
   host: process.env.POSTGRES_HOST || "localhost",
-  database: process.env.POSTGRES_DATABASE,
+  database: process.env.POSTGRES_DATABASE || "BDPRODUCTO10",
   password: process.env.POSTGRES_PASSWORD || "123456",
   port: process.env.POSTGRES_PORT || 5432,
   max: 10, // Maximum number of clients in the pool

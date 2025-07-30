@@ -1,4 +1,4 @@
-create database BDPRODUCTO5;
+create database BDPRODUCTO10;
 CREATE TABLE producto (
     id_producto serial PRIMARY KEY,
     nombre varchar(50) NOT NULL,

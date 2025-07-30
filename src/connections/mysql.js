@@ -5,8 +5,8 @@ import { createPool } from "mysql2/promise";
 const config = {
   host: process.env.MYSQL_HOST || "localhost",
   user: process.env.MYSQL_USER || "root",
-  password: process.env.MYSQL_PASSWORD || "123456",
-  database: process.env.MYSQL_DATABASE || "BDPRODUCTO5",
+  password: process.env.MYSQL_PASSWORD || "mysql123",
+  database: process.env.MYSQL_DATABASE || "bdproducto10",
   port: process.env.MYSQL_PORT || 3306,
   connectionLimit: 10,
 };
