@@ -1,5 +1,5 @@
 create database if not exists BDPRODUCTO10;
-use BDPRODUCTO5;
+use BDPRODUCTO10;
 create table producto (
 	id int auto_increment PRIMARY KEY,
 	nombre varchar(50) NOT NULL,
