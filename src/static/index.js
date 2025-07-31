@@ -1,4 +1,6 @@
 // File: src/static/index.js
+let bloqueoInserciones = false;
+let bloqueoBorrado = false;
 document.addEventListener("DOMContentLoaded", () => {
   const botones = document.querySelectorAll(".gestor-button");
   botones.forEach((btn) => {
@@ -52,6 +54,16 @@ const Toast = Swal.mixin({
 
 async function insertarProductoStored(event) {
   event.preventDefault();
+  if (bloqueoInserciones) {
+  Swal.fire({
+    title: "Operación no permitida",
+    text: "Espera a que se complete el borrado de inserciones antes de insertar.",
+    icon: "warning",
+    confirmButtonText: "OK",
+  });
+  return;
+}
+  bloqueoBorrado = true; // ← SOLO UNA VEZ AQUÍ
   const botonInsertar = document.getElementById("insertar-stored");
   const name = document.getElementById("name").value;
   const category = document.getElementById("category").value;
@@ -268,11 +280,22 @@ async function insertarProductoStored(event) {
       botonInsertar.textContent = "Insertar Producto con SP"; // Reset button text
     }
   }
+  bloqueoBorrado = false; // ← aquí desbloqueas
 }
 
 // Function to insert a product directly into the database
 async function insertarProducto(event) {
   event.preventDefault();
+  if (bloqueoInserciones) {
+  Swal.fire({
+    title: "Operación no permitida",
+    text: "Espera a que se complete el borrado de inserciones antes de insertar.",
+    icon: "warning",
+    confirmButtonText: "OK",
+  });
+  return;
+}
+  bloqueoBorrado = true; // ← SOLO UNA VEZ AQUÍ
   const botonInsertar = document.getElementById("insertar-directo");
   const nombre = document.getElementById("name").value;
   const categoria = document.getElementById("category").value;
@@ -491,7 +514,114 @@ async function insertarProducto(event) {
       botonInsertar.textContent = "Insertar Producto"; // Reset button text
     }
   }
+  bloqueoBorrado = false; // ← aquí desbloqueas
 }
+// Función para borrar todas las inserciones
+document.getElementById("borrar-todas-inserciones")?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  if (bloqueoBorrado) {
+  Swal.fire({
+    title: "Operación no permitida",
+    text: "Espera a que se complete la inserción antes de borrar registros.",
+    icon: "warning",
+    confirmButtonText: "OK",
+  });
+  return;
+}
+  const botonBorrar = document.getElementById("borrar-todas-inserciones");
+    bloqueoInserciones = true; // ← aquí bloqueas
+  
+  try {
+    botonBorrar.setAttribute("disabled", "true");
+    botonBorrar.textContent = "Borrando...";
+    
+    // Mostrar confirmación
+    const confirmacion = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "Esta acción borrará todos los registros de todas las bases de datos",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, borrar todo',
+      cancelButtonText: 'Cancelar'
+    });
+    
+    if (!confirmacion.isConfirmed) {
+      botonBorrar.removeAttribute("disabled");
+      botonBorrar.textContent = "Borrar Todas las Inserciones";
+      return;
+    }
+    
+    Toast.fire({
+      icon: "info",
+      title: "Borrando inserciones en todas las bases de datos...",
+    });
+    
+    // Array de promesas para borrar en todos los gestores
+    const borrados = await Promise.allSettled([
+      fetch("/api/mysql", { method: "DELETE" }),
+      fetch("/api/postgresql", { method: "DELETE" }),
+      fetch("/api/sqlserver", { method: "DELETE" }),
+      fetch("/api/oracle", { method: "DELETE" })
+    ]);
+    
+    // Verificar resultados
+    const resultados = borrados.map((resultado, index) => {
+      const gestores = ["MySQL", "PostgreSQL", "SQL Server", "Oracle"];
+      if (resultado.status === "fulfilled") {
+        return { gestor: gestores[index], ok: resultado.value.ok };
+      }
+      return { gestor: gestores[index], ok: false, error: resultado.reason };
+    });
+    
+    // Mostrar resultados
+    const exitosos = resultados.filter(r => r.ok).length;
+    const fallidos = resultados.filter(r => !r.ok).length;
+    
+    if (fallidos === 0) {
+      await Swal.fire({
+        title: 'Éxito',
+        text: `Todas las inserciones (${exitosos}) fueron borradas correctamente`,
+        icon: 'success'
+      });
+    } else if (exitosos === 0) {
+      await Swal.fire({
+        title: 'Error',
+        text: 'No se pudo borrar ninguna inserción',
+        icon: 'error'
+      });
+    } else {
+      await Swal.fire({
+        title: 'Resultado parcial',
+        html: `Se borraron inserciones en ${exitosos} gestores, pero falló en ${fallidos}.<br><br>
+               <strong>Detalles:</strong><br>
+               ${resultados.map(r => 
+                 `${r.gestor}: ${r.ok ? '✅ Éxito' : '❌ Error'}`).join('<br>')}`,
+        icon: 'warning'
+      });
+    }
+    
+    // Actualizar contadores a "0" en la interfaz
+    document.querySelectorAll('[id^="insertar-"]').forEach(element => {
+      if (element.textContent.includes("Productos insertados:")) {
+        element.textContent = "Productos insertados: 0";
+      }
+    });
+    
+  } catch (error) {
+    console.error("Error al borrar inserciones:", error);
+    Swal.fire({
+      title: 'Error',
+      text: 'Ocurrió un error al intentar borrar las inserciones',
+      icon: 'error'
+    });
+  } finally {
+    bloqueoInserciones = false; // ← aquí desbloqueas
+    botonBorrar.removeAttribute("disabled");
+    botonBorrar.textContent = "Borrar Todas las Inserciones";
+  }
+});
 
 async function testConnection(gestor) {
   if (gestor === "mysql") {
